@@ -1,47 +1,23 @@
-<?php namespace Braunson\FatSecret;
+<?php
+
+namespace Braunson\FatSecret;
 
 use Illuminate\Support\ServiceProvider;
 
 class FatSecretServiceProvider extends ServiceProvider
 {
-	/**
-	 * Indicates if loading of the provider is deferred.
-	 *
-	 * @var bool
-	 */
-	protected $defer = false;
+    public function register()
+    {
+        $this->app->singleton(FatSecret::class, function ($app) {
+            $config = $app['config']->get('fatsecret');
+            return new FatSecret($config['consumer_key'], $config['consumer_secret'], $config['api_url']);
+        });
+    }
 
-	/**
-	 * Bootstrap the application events.
-	 *
-	 * @return void
-	 */
-	public function boot()
-	{
-		$this->package('braunson/fat-secret');
-	}
-
-	/**
-	 * Register the service provider.
-	 *
-	 * @return void
-	 */
-	public function register()
-	{
-		$this->app['fatsecret'] = $this->app->share(function($app)
-		{
-			return new FatSecret(\Config::get('services.fatsecret.key'), \Config::get('services.fatsecret.secret'));
-		});
-	}
-
-	/**
-	 * Get the services provided by the provider.
-	 *
-	 * @return array
-	 */
-	public function provides()
-	{
-		return array('fatsecret');
-	}
-
+    public function boot()
+    {
+        $this->publishes([
+            __DIR__ . '/../config/fatsecret.php' => config_path('fatsecret.php'),
+        ]);
+    }
 }

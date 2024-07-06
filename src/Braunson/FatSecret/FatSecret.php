@@ -5,7 +5,7 @@ use Config, Exception, App, Log;
 
 class FatSecret
 {
-	static public $base = 'http://platform.fatsecret.com/rest/server.api?format=json&';
+	static public $base = 'https://platform.fatsecret.com/rest/server.api?format=json&';
 
 	/* Private Data */
 
